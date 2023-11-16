@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <product-detail />
+    <product-detail :is-edit="false"/>
   </div>
 </template>
 
@@ -31,8 +31,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.el-card{
-    width: 1000px;
-    margin: 0 auto;
-}
 </style>

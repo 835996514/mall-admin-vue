@@ -21,12 +21,18 @@
       @nextStep="nextStep"
       @prevStep="prevStep"
     ></product-sale-detail>
+    <product-attr-detail
+      v-show="active==2"
+      @nextSte="nextStep"
+      @prevStep="prevStep"
+    ></product-attr-detail>
   </el-card>
 </template>
 
 <script>
 import productInfoDetail from "./ProductInfoDetail.vue";
 import productSaleDetail from "./ProductSaleDetail";
+import productAttrDetail from "./ProductAttrDetail";
 
 export default {
   props: {
@@ -36,7 +42,7 @@ export default {
   },
   data() {
     return {
-      active: 1,
+      active: 2,
     };
   },
   methods: {
@@ -48,10 +54,9 @@ export default {
     }
   },
   created() {
-    // console.log(this.$route.query)
   },
   components: {
-    productInfoDetail,productSaleDetail
+    productInfoDetail,productSaleDetail,productAttrDetail
   },
 };
 </script>

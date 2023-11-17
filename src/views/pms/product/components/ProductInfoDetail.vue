@@ -56,7 +56,7 @@
       ></el-input>
     </el-form-item>
     <el-form-item label="商品货号">
-        <el-input v-model="productSn"></el-input>
+      <el-input v-model="productSn"></el-input>
     </el-form-item>
     <el-form-item label="商品售价">
       <el-input v-model="price"></el-input>
@@ -68,7 +68,10 @@
       <el-input v-model="stock"></el-input>
     </el-form-item>
     <el-form-item label="计量单位">
-      <el-input v-model="unit" style="width: 280px"></el-input><span style="margin-left: 10px">克</span>
+      <el-input
+        v-model="unit"
+        style="width: 280px"
+      ></el-input><span style="margin-left: 10px">克</span>
     </el-form-item>
     <el-form-item label="商品重量">
       <el-input v-model="weight"></el-input>
@@ -99,7 +102,7 @@ export default {
       brandId: null,
       brandOptions: [],
       description: "",
-      productSn: '',
+      productSn: "",
       price: 0,
       originalPrice: 0,
       stock: 0,
@@ -108,16 +111,17 @@ export default {
       sort: 0,
       rules: {
         productCategoryId: [{ required: true, message: "请选择商品分类" }],
-        name: [{ required: true, message: "请输入商品名称" }],
+        name: [
+          { required: true, message: "请输入商品名称" },
+          { min: 2, max: 140, message: "长度在2到140个字符" },
+        ],
         subTitle: [{ required: true, message: "请输入副标题" }],
         brandId: [{ required: true, message: "请选择商品品牌" }],
       },
     };
   },
   methods: {
-    handleCateChange(){
-
-    },
+    handleCateChange() {},
     submitForm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
@@ -133,8 +137,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.infoForm{
-    width: 800px;
-    margin: 0 auto;
+.infoForm {
+  width: 800px;
+  margin: 0 auto;
 }
 </style>

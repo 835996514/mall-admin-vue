@@ -153,7 +153,7 @@
           <template slot-scope="scope">
             <el-button
               type="text"
-              @click="removeLadder(scope.$index,scope)"
+              @click="removeLadder(scope.$index)"
             >删除</el-button>
             <el-button
               type="text"
@@ -162,6 +162,54 @@
           </template>
         </el-table-column>
       </el-table>
+    </el-form-item>
+    <el-form-item
+      v-show="promotionType==4"
+      class="promotion"
+    >
+      <el-table
+        :data="productFullReductionList"
+        border
+        style="width: 80%;"
+      >
+        <el-table-column
+          label="满"
+          align="center"
+          width="120px"
+        >
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.fullPrice"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="立减"
+          align="center"
+          width="120px"
+        >
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.reducePrice"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <el-button
+              type="text"
+              @click="removeFull(scope.$index)"
+            >删除</el-button>
+            <el-button
+              type="text"
+              @click="addFull"
+            >添加</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-form-item>
+    <el-form-item class="bottomButton">
+      <el-button size="medium" @click="prevStep">上一步，填写商品信息</el-button>
+      <el-button size="medium" type="primary" @click="nextStep">下一步，填写商品属性</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -225,24 +273,46 @@ export default {
     },
   },
   methods: {
-    addLadder(){
-        if(this.productLadderList.length == 3){
-            this.$message({
-                message: '最顶只能添加3条',
-                type: 'warning'
-            })
-            return;
-        }
-        this.productLadderList.push({ count: 0, discount: 0, price: 0 })
+    addLadder() {
+      if (this.productLadderList.length == 3) {
+        this.$message({
+          message: "最多只能添加3条",
+          type: "warning",
+        });
+        return;
+      }
+      this.productLadderList.push({ count: 0, discount: 0, price: 0 });
     },
-    removeLadder(index,row){
-        debugger
-        if(this.productLadderList.length==1) {
-            this.productLadderList = [{ count: 0, discount: 0, price: 0 }]
-        }else{
-            this.productLadderList.splice(index,1)
-        }
-    }
+    removeLadder(index) {
+      if (this.productLadderList.length == 1) {
+        this.productLadderList = [{ count: 0, discount: 0, price: 0 }];
+      } else {
+        this.productLadderList.splice(index, 1);
+      }
+    },
+    addFull() {
+      if (this.productFullReductionList.length == 3) {
+        this.$message({
+          message: "最多只能添加3条",
+          type: "warning",
+        });
+        return;
+      }
+      this.productFullReductionList.push({ fullPrice: 0, reducePrice: 0 });
+    },
+    removeFull(index) {
+      if (this.productFullReductionList.length == 1) {
+        this.productFullReductionList = [{ fullPrice: 0, reducePrice: 0 }];
+      } else {
+        this.productFullReductionList.splice(index, 1);
+      }
+    },
+    prevStep() {
+      this.$emit('prevStep');
+    },
+    nextStep() {
+      this.$emit('nextStep');
+    },
   },
   created() {
     fetchList({ defaultStatus: 0 }).then((res) => {
@@ -262,5 +332,13 @@ export default {
 <style lang="less" scoped>
 .promotion div {
   margin: 5px 0;
+}
+.bottomButton {
+  display: flex;
+  justify-content: center;
+}
+//less样式穿透使用 '/deep/'
+.bottomButton /deep/ .el-form-item__content {
+  margin-left: 0 !important;
 }
 </style>

@@ -11,11 +11,6 @@ export default {
   name: "Add",
   data() {
     return {
-      active: 0,
-      productCategoryId: null,
-      brandId: null,
-      productCategoryOptions: [],
-      brandOptions: []
     };
   },
   created(){

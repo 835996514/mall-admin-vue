@@ -1,7 +1,7 @@
 <template>
   <el-form
     ref="form"
-    :model="data"
+    :model="value"
     label-width="80px"
     :rules="rules"
     size="mini"
@@ -12,7 +12,7 @@
       prop="productCategoryId"
     >
       <el-cascader
-        v-model="productCategoryId"
+        v-model="value.productCategoryId"
         :options="productCategoryOptions"
         @change="handleCateChange"
         placeholder="请选择"
@@ -22,28 +22,28 @@
       label="商品名称"
       prop="name"
     >
-      <el-input v-model="name"></el-input>
+      <el-input v-model="value.name"></el-input>
     </el-form-item>
     <el-form-item
       label="副标题"
       prop="subTitle"
     >
-      <el-input v-model="subTitle"></el-input>
+      <el-input v-model="value.subTitle"></el-input>
     </el-form-item>
     <el-form-item
       label="商品品牌"
       prop="brandId"
     >
       <el-select
-        v-model="brandId"
+        v-model="value.brandId"
         placeholder="请选择品牌"
         clearable
       >
         <el-option
           v-for="item in brandOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
         ></el-option>
       </el-select>
     </el-form-item>
@@ -90,16 +90,15 @@
 </template>
 
 <script>
+import { fetchList as getCateList } from "@/api/productClass";
+import { getList as getBrandList } from "@/api/brand";
+
 export default {
   props: {},
   data() {
     return {
-      data: {},
-      name: "",
-      subTitle: "",
-      productCategoryId: null,
+      value: {},
       productCategoryOptions: [],
-      brandId: null,
       brandOptions: [],
       description: "",
       productSn: "",
@@ -110,7 +109,7 @@ export default {
       weight: 0,
       sort: 0,
       rules: {
-        productCategoryId: [{ required: true, message: "请选择商品分类" }],
+        productCategoryId: [{required: true, message: "请选择商品分类" }],
         name: [
           { required: true, message: "请输入商品名称" },
           { min: 2, max: 140, message: "长度在2到140个字符" },
@@ -120,15 +119,44 @@ export default {
       },
     };
   },
+  created() {
+    this.getCateOptions();
+    this.getBrandOptions();
+  },
   methods: {
-    handleCateChange() {},
+    handleCateChange(value) {this.productCategoryId = value[1]},
     submitForm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          console.log("submit");
           this.$emit("nextStep");
         } else {
           return false;
+        }
+      });
+    },
+    getCateOptions() {
+      getCateList().then((res) => {
+        this.productCategoryOptions = res.data;
+        this.copyTransFun(this.productCategoryOptions);
+      });
+    },
+    getBrandOptions() {
+      getBrandList().then((res) => {
+        this.brandOptions = res.data;
+      });
+    },
+    copyTransFun(arr) {
+      arr.forEach((item) => {
+        if (item.id) {
+          item.value = item.id;
+          delete item.id;
+        }
+        if (item.name) {
+          item.label = item.name;
+          delete item.name;
+        }
+        if (item.children && item.children.length > 0) {
+          this.copyTransFun(item.children);
         }
       });
     },

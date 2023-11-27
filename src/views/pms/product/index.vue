@@ -406,7 +406,7 @@ import {
 import { fetchList,update as skuUpdate } from "@/api/skuStock";
 import { fetchList as getProductAttrList } from "@/api/productAttr";
 import { getList as listBrand } from "@/api/brand";
-import { listWithChildren } from "@/api/productCate";
+import { fetchList as listWithChildren } from "@/api/productClass";
 export default {
   name: "index",
   data() {
